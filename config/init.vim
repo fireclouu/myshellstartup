@@ -4,14 +4,13 @@ set termguicolors
 call plug#begin()
 Plug 'navarasu/onedark.nvim'
 Plug 'lukas-reineke/indent-blankline.nvim'
-call plug#end()
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine
-highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine
-highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine
-highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine
-highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine
-highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+call plug#end()
 
 lua << EOF
 -- Lua
@@ -50,6 +49,16 @@ require('onedark').setup  {
     },
 }
 require('onedark').load()
+
+vim.opt.termguicolors = true
+vim.cmd [[highlight IndentBlanklineIndent1 guifg=#E06C75 gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent2 guifg=#E5C07B gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent3 guifg=#98C379 gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent4 guifg=#56B6C2 gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent5 guifg=#61AFEF gui=nocombine]]
+vim.cmd [[highlight IndentBlanklineIndent6 guifg=#C678DD gui=nocombine]]
+
+vim.opt.list = true
 
 require("indent_blankline").setup {
     space_char_blankline = " ",
