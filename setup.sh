@@ -12,7 +12,8 @@ checkStatus() {
 mkdir -p ~/.config/nvim
 
 # initialize
-apt-get update -y > /dev/null && apt-get upgrade -y > /dev/null
+apt-get update -y
+apt-get upgrade -y
 
 # packages
 dpkg -s $PACKAGES > /dev/null
@@ -39,25 +40,23 @@ if [ -d ~/.oh-my-zsh ]; then
 fi
 #powerlevel10k
 rmdir ~/.oh-my-zsh/custom/themes/powerlevel10k 2> /dev/null
-if [ $? -eq 0 ]; then
+#if [ $? -eq 0 ]; then
 	git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-fi
+#fi
 
 #avoid overwrite
 cp -n ~/.zshrc ~/.zshrc.bak 
 cat ~/.zshrc.bak > ~/.zshrc
 sed -i 's/ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
 
+# pip
+pip3 install pynvim
+
 # nvim
 #plug vim
 sh -c 'curl --no-progress-meter -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-printf "\
-set number\n\
-\n\
-call plug#begin()\n\
-call plug#end()\n\
-" > ~/.config/nvim/init.vim
+cp -f config/init.vim ~/.config/nvim/init.vim
 
 printf "done. restart your terminal.\n"
