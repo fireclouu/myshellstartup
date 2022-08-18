@@ -68,13 +68,15 @@ prepTerminal() {
 
 #OHMYZSH
 prepOmz() {
+	VERIFYOMZ=$(echo $ZSH | rev | cut -d'/' -f1 | rev)
+
 	if [ -d ~/.oh-my-zsh ]; then
-		inf "OMZ: ohmyzsh exist or installed!"
+		if [ "$VERIFYOMZ" = ".oh-my-zsh" ]; then
+			inf "OMZ: ohmyzsh exist or installed!"
+		fi
 	 else
 		inf "OMZ: Installing oh-my-zsh, wait a while..."
-		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" &> /dev/null
-		sleep 5
-		prepOmz
+		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && prepOmz
 	fi
 }
 
@@ -88,10 +90,8 @@ prepP10k() {
 		sed -i 's/ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
 		inf "P10K: Theme applied!"
 	else
-		inf "P10K: Installing powerlevel10k"
-		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-		sleep 4
-		prepP10k
+		inf "P10K: Installing powerlevel10k. wait a while..."
+		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && prepP10k
 	fi
 }
 
@@ -121,9 +121,7 @@ prepNvim() {
 	else
 		inf "NVIM: Installing plug.vim..., wait a while..."
 		sh -c 'curl --no-progress-meter -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-		sleep 4
-       prepNvim
+https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' && prepNvim
 	fi
 }
 
