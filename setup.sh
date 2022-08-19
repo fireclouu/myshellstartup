@@ -139,3 +139,5 @@ main() {
 
 	inf "SETUP: Done setting up! Restart your terminal."
 }
+
+main
