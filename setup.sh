@@ -113,9 +113,7 @@ prepNvim() {
 	if [ -f ~/.local/share/nvim/site/autoload/plug.vim ]; then
 		inf "NVIM: plug.vim exist or installed!"
 		cp -f config/init.vim ~/.config/nvim/init.vim
-		nvim +PlugInstall +qall
-		nvim +PlugUpgrade +qall
-		nvim +CocInstall coc-clangd +qall
+		nvim +PlugInstall +qall && nvim +PlugUpgrade +qall && nvim +CocInstall coc-clangd +qall
 		
 		inf "NVIM: copied init.vim configuration!"
 	else
