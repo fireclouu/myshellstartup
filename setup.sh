@@ -110,7 +110,7 @@ prepPIP() {
 #NVIM
 prepNvim() {
 	#vimplug
-	if ls ~/.local/share/nvim/site/autoload/plug.vim &> /dev/null; then
+	if [ -f ~/.local/share/nvim/site/autoload/plug.vim ]; then
 		inf "NVIM: plug.vim exist or installed!"
 		cp -f config/init.vim ~/.config/nvim/init.vim
 		nvim +PlugInstall +qall
