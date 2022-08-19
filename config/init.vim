@@ -1,5 +1,7 @@
 set number
 set termguicolors
+set noshowmode
+set laststatus=2
 
 call plug#begin()
 Plug 'navarasu/onedark.nvim'
@@ -8,15 +10,20 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 call plug#end()
+
+" lightline
+let g:lightline = {
+      \ 'colorscheme': 'one',
+      \ 'background': 'dark',
+      \ }
 
 lua << EOF
 -- Lua
 require('onedark').setup  {
     -- Main options --
-    style = 'darker', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+    style = 'dark', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
     transparent = false,  -- Show/hide background
     term_colors = true, -- Change terminal color as per the selected theme style
     ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden

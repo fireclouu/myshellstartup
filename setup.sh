@@ -126,14 +126,16 @@ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' && prepNvim
 }
 
 # main
-if ! [ $SETUPJUMPFLAG ]; then
-	prepUpgrade
-	prepPackages
-fi
-prepTerminal
-prepOmz
-prepP10k
-prepPIP
-prepNvim
+main() {
+	if ! [ $SETUPJUMPFLAG ]; then
+		prepUpgrade
+		prepPackages
+	fi
+	prepTerminal
+	prepOmz
+	prepP10k
+	prepPIP
+	prepNvim
 
-inf "SETUP: Done setting up! Restart your terminal."
+	inf "SETUP: Done setting up! Restart your terminal."
+}
