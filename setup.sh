@@ -33,14 +33,20 @@ prepUpgrade() {
 # SPECIFIC INITS
 prepInits() {
 	if echo $PREFIX | grep com.termux &> /dev/null; then
-		inf "INIT (TERMUX): Requesting permission..."
-		termux-setup-storage
+		inf "INIT (TERMUX): Checking for permission"
+		if ! touch /sdcard/.tmp; then
+			inf "INIT (TERMUX): Requesting permission..."
+			termux-setup-storage
+		else 
+			inf "INIT (TERMUX): Permission already granted!"
+		fi
+		rm -rf /sdcard/.tmp &> /dev/null
 	fi
 }
 
 # PACKAGES
 prepPackages() {
-	let COUNTER++
+	COUNTER=$(expr $COUNTER + 1)
 	if [ $COUNTER -lt 1 ]; then
 		inf "PACKAGES: installing user-defined packages"
 	elif [ $COUNTER -le 3 ]; then
@@ -96,12 +102,17 @@ prepP10k() {
 		inf "P10K: powerlevel10k exist or installed!"
 		inf "P10K: Dynamically modifying theme..."
 		cp -n ~/.zshrc ~/.zshrc.bak 
+		# to avoid triggering p10k config if there is existing setuo
+		touch -r ~/.zshrc ~/.zshrc.bak
 		cat ~/.zshrc.bak > ~/.zshrc
 		sed -i 's/ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
+		# to avoid triggering p10k config
+		touch -r ~/.zshrc.bak ~/.zshrc
 		inf "P10K: Theme applied!"
 	else
 		inf "P10K: Installing powerlevel10k. wait a while..."
-		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && prepP10k
+		git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k\
+			&& prepP10k
 	fi
 }
 
@@ -137,16 +148,20 @@ prepMake() {
 
 	inf "BUILD: Starting build..."
 	inf "BUILD: building maxcso..."
-	git clone https://github.com/unknownbrackets/maxcso.git\
-		&& (cd $PWD/maxcso && make)\
-		&& (cd $PWD/maxcso && mv maxcso $MBINPATH)
-	if [ $? -eq 0 ]; then
-		inf "BUILD: \"maxcso\" build success"
+	if ! test maxcso; then
+		git clone https://github.com/unknownbrackets/maxcso.git\
+			&& (cd $PWD/maxcso && make)\
+			&& (cd $PWD/maxcso && mv maxcso $MBINPATH)
+		if [ $? -eq 0 ]; then
+			inf "BUILD: \"maxcso\" build success"
+		else
+			err "BUILD: \"maxcso\" build failed!"
+		fi
+		inf "BUILD: cleaning up..."
+		rm -rf "$PWD/maxcso/"
 	else
-		err "BUILD: \"maxcso\" build failed!"
+		inf "BUILD: \"maxcso\" already installed!"
 	fi
-	inf "BUILD: cleaning up..."
-	rm -rf "$PWD/maxcso/"
 }
 
 # main
