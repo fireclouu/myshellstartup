@@ -1,6 +1,8 @@
 #!/system/bin/sh
 DEFAULTSHELL=$(echo $1 | rev | cut -d'/' -f1 | rev)
 PACKAGES="git clang neovim python2 python clang nodejs zsh perl curl wget"
+PKG_ESSENTIALS=""
+MBINPATH=$(echo $PATH | cut -d":" -f1)
 PYMODS="pynvim"
 COUNTER=0
 
@@ -26,6 +28,14 @@ fi
 # UPGRADES
 prepUpgrade() {
 	apt-get upgrade -y && apt-get update -y
+}
+
+# SPECIFIC INITS
+prepInits() {
+	if echo $PREFIX | grep com.termux &> /dev/null; then
+		inf "INIT (TERMUX): Requesting permission..."
+		termux-setup-storage
+	fi
 }
 
 # PACKAGES
@@ -123,10 +133,27 @@ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' && prepNvim
 	fi
 }
 
+prepMake() {
+
+	inf "BUILD: Starting build..."
+	inf "BUILD: building maxcso..."
+	git clone https://github.com/unknownbrackets/maxcso.git\
+		&& (cd $PWD/maxcso && make)\
+		&& (cd $PWD/maxcso && mv maxcso $MBINPATH)
+	if [ $? -eq 0 ]; then
+		inf "BUILD: \"maxcso\" build success"
+	else
+		err "BUILD: \"maxcso\" build failed!"
+	fi
+	inf "BUILD: cleaning up..."
+	rm -rf "$PWD/maxcso/"
+}
+
 # main
 main() {
 	if ! [ $SETUPJUMPFLAG ]; then
 		prepUpgrade
+		prepInits
 		prepPackages
 	fi
 	prepTerminal
@@ -134,7 +161,7 @@ main() {
 	prepP10k
 	prepPIP
 	prepNvim
-
+	prepMake
 	inf "SETUP: Done setting up! Restart your terminal."
 }
 
