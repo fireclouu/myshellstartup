@@ -1,6 +1,6 @@
 #!/system/bin/sh
 DEFAULTSHELL=$(echo $1 | rev | cut -d'/' -f1 | rev)
-PACKAGES="git clang neovim python2 python clang nodejs zsh perl curl wget"
+PACKAGES="git clang neovim python2 python clang nodejs zsh perl curl wget kotlin gradle"
 PKG_ESSENTIALS=""
 MBINPATH=$(echo $PATH | cut -d":" -f1)
 PYMODS="pynvim"
@@ -134,7 +134,7 @@ prepNvim() {
 	if [ -f ~/.local/share/nvim/site/autoload/plug.vim ]; then
 		inf "NVIM: plug.vim exist or installed!"
 		cp -f config/init.vim ~/.config/nvim/init.vim
-		nvim +PlugInstall +qall && nvim +PlugUpgrade +qall && nvim +CocInstall coc-clangd +qall
+		nvim +PlugInstall +qall && nvim +PlugUpgrade +qall && nvim +CocInstall coc-clangd +CocInstall coc-kotlin +qall && nvim +"TSUpdate" && nvim +"TSInstall kotlin cl"
 		
 		inf "NVIM: copied init.vim configuration!"
 	else
