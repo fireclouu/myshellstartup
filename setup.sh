@@ -148,7 +148,7 @@ prepMake() {
 
 	inf "BUILD: Starting build..."
 	inf "BUILD: building maxcso..."
-	if ! test maxcso; then
+	if ! which maxcso &> /dev/null; then
 		git clone https://github.com/unknownbrackets/maxcso.git\
 			&& (cd $PWD/maxcso && make)\
 			&& (cd $PWD/maxcso && mv maxcso $MBINPATH)
